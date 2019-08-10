@@ -2,7 +2,7 @@
 pub inline fn MaybeUninit(comptime T: type) type {
     return packed union {
         value: T,
-        uninit: []align(2048) void,
+        uninit: void,
 
         const Self = @This();
 
@@ -13,7 +13,7 @@ pub inline fn MaybeUninit(comptime T: type) type {
 
         /// Creates a new `MaybeUninit(T)` in an uninitialized state.
         inline fn uninit() Self {
-            return Self{ .uninit = &([1]void{{}} ** 1024) };
+            return Self{ .uninit = {} };
         }
 
         /// Creates a new `MaybeUnint(T)` in an uninitialized state, with the memory being filled with `0` bytes.

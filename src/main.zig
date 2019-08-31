@@ -65,8 +65,7 @@ pub inline fn MaybeUninit(comptime T: type) type {
     };
 }
 
-const std = @import("std");
-const testing = std.testing;
+const testing: type = if (@import("builtin").is_test) @import("std").testing else void;
 
 test "test usage" {
     var maybe = MaybeUninit(u64).zeroed();
@@ -95,4 +94,12 @@ test "assert align" {
     testing.expectEqual(@alignOf(MaybeUninit(u64)), @alignOf(u64));
     testing.expectEqual(@alignOf(MaybeUninit(?*u64)), @alignOf(*u64));
     testing.expectEqual(@alignOf(?MaybeUninit(*u64)), 8);
+}
+
+test "comptime init" {
+    comptime {
+        var maybe = MaybeUninit(i32).init(42);
+        var ptr = maybe.as_mut_ptr();
+        testing.expectEqual(ptr.*, 42);
+    }
 }

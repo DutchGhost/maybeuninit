@@ -1,0 +1,26 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    wget https://ziglang.org/download/0.3.0/zig-linux-x86_64-0.3.0.tar.xz
+    wget https://ziglang.org/download/0.4.0/zig-linux-x86_64-0.4.0.tar.xz
+    wget https://ziglang.org/download/0.5.0/zig-linux-x86_64-0.5.0.tar.xz
+    tar xf zig-linux-x86_64-0.5.0.tar.xz
+    tar xf zig-linux-x86_64-0.4.0.tar.xz
+    tar xf zig-linux-x86_64-0.3.0.tar.xz
+    ./zig-linux-x86_64-0.3.0/zig test src/maybeuninit.zig
+    ./zig-linux-x86_64-0.4.0/zig test src/maybeuninit.zig
+    ./zig-linux-x86_64-0.5.0/zig test src/maybeuninit.zig
+  displayName: 'Run a multi-line script'

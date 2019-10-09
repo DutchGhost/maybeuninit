@@ -20,6 +20,7 @@ steps:
     tar xf zig-linux-x86_64-0.5.0.tar.xz
     tar xf zig-linux-x86_64-0.4.0.tar.xz
     tar xf zig-linux-x86_64-0.3.0.tar.xz
+    ls -lah
     ./zig-linux-x86_64-0.3.0/zig test src/maybeuninit.zig
     ./zig-linux-x86_64-0.4.0/zig test src/maybeuninit.zig
     ./zig-linux-x86_64-0.5.0/zig test src/maybeuninit.zig

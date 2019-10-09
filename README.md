@@ -1,4 +1,5 @@
 # maybeuninit
+[![Build Status](https://dev.azure.com/s1101481/s1101481/_apis/build/status/DutchGhost.maybeuninit%20(1)?branchName=master)](https://dev.azure.com/s1101481/s1101481/_build/latest?definitionId=2&branchName=master)
 
 This is a userlevel implementation of the `undefined` keyword in Zig.<br>
 It is inspired by [MaybeUninit](https://doc.rust-lang.org/stable/core/mem/union.MaybeUninit.html) in Rust.

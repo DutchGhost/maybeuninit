@@ -1,6 +1,6 @@
 /// A wrapper type to construct uninitialized instances of `T`.
 pub inline fn MaybeUninit(comptime T: type) type {
-    return packed union {
+    return extern union {
         value: T,
         uninit: void,
 
@@ -87,13 +87,13 @@ test "first_ptr" {
 test "assert size" {
     testing.expectEqual(@sizeOf(MaybeUninit(u64)), @sizeOf(u64));
     testing.expectEqual(@sizeOf(MaybeUninit(?*u64)), @sizeOf(*u64));
-    testing.expectEqual(@sizeOf(?MaybeUninit(*u64)), 16);
+    testing.expectEqual(@sizeOf(?MaybeUninit(*u64)), usize(16));
 }
 
 test "assert align" {
     testing.expectEqual(@alignOf(MaybeUninit(u64)), @alignOf(u64));
     testing.expectEqual(@alignOf(MaybeUninit(?*u64)), @alignOf(*u64));
-    testing.expectEqual(@alignOf(?MaybeUninit(*u64)), 8);
+    testing.expectEqual(@alignOf(?MaybeUninit(*u64)), usize(8));
 }
 
 test "comptime init" {

@@ -108,12 +108,9 @@ test "comptime init" {
     }
 }
 
-test "zero sized slice" {
-    var maybe = [_] MaybeUninit(u64) {};
+test "first_ptr_mut" {
+    var maybe = [1] MaybeUninit(u64) {MaybeUninit(u64).uninit()};
     var ptr = MaybeUninit(u64).first_ptr_mut(&maybe);
-
-    var empty_array = [_]u64 {};
-    var empty: []u64 = &empty_array;
-
-    testing.expectEqual(ptr, &empty.ptr[0]);
+    ptr.* = 10;
+    testing.expectEqual(ptr.*, 10);
 }

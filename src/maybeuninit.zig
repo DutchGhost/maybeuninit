@@ -59,7 +59,7 @@ pub inline fn MaybeUninit(comptime T: type) type {
         }
 
         /// Gets a mutable pointer to the first element of the slice.
-        inline fn first_ptr_mut(this: []Self) *Self {
+        inline fn first_ptr_mut(this: []Self) *T {
             return @ptrCast(*T, this.ptr);
         }
     };
@@ -106,4 +106,14 @@ test "comptime init" {
         var ptr = maybe.as_mut_ptr();
         testing.expectEqual(ptr.*, 42);
     }
+}
+
+test "zero sized slice" {
+    var maybe = [_] MaybeUninit(u64) {};
+    var ptr = MaybeUninit(u64).first_ptr_mut(&maybe);
+
+    var empty_array = [_]u64 {};
+    var empty: []u64 = &empty_array;
+
+    testing.expectEqual(ptr, &empty.ptr[0]);
 }

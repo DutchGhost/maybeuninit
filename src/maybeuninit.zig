@@ -2,7 +2,8 @@
 pub inline fn MaybeUninit(comptime T: type) type {
     const builtin = @import("builtin");
     if (@typeId(T) == builtin.TypeId.NoReturn) {
-        @compileError("Can't construct MaybeUninit(noreturn). It blows up your computer. See https://github.com/ziglang/zig/issues/3603");
+        @compileError("Can't construct MaybeUninit(noreturn)." ++
+            "It blows up your computer. See https://github.com/ziglang/zig/issues/3603");
     }
 
     return extern union {
@@ -21,7 +22,8 @@ pub inline fn MaybeUninit(comptime T: type) type {
             return Self{ .uninit = {} };
         }
 
-        /// Creates a new `MaybeUnint(T)` in an uninitialized state, with the memory being filled with `0` bytes.
+        /// Creates a new `MaybeUnint(T)` in an uninitialized state,
+        /// with the memory being filled with `0` bytes.
         /// It depends on `T` whether that already makes for proper initialization.
         pub inline fn zeroed() Self {
             var u = Self.uninit();
@@ -48,7 +50,8 @@ pub inline fn MaybeUninit(comptime T: type) type {
         }
 
         /// Reads the value from the `MabeUninit(T)` container.
-        /// Whenever possible, prefer to use [`MaybeUninit::assume_init`] instead, which prevents duplicating the content of the `MaybeUninit(T)`.
+        /// Whenever possible, prefer to use [`MaybeUninit::assume_init`] instead,
+        /// which prevents duplicating the content of the `MaybeUninit(T)`.
         pub inline fn read(self: *const Self) T {
             return self.as_ptr().*;
         }

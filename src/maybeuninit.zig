@@ -7,18 +7,18 @@ pub inline fn MaybeUninit(comptime T: type) type {
         const Self = @This();
 
         /// Creates a new initialized `MaybeUninit(T)` initialized with the given value.
-        inline fn init(value: T) Self {
+        pub inline fn init(value: T) Self {
             return Self{ .value = value };
         }
 
         /// Creates a new `MaybeUninit(T)` in an uninitialized state.
-        inline fn uninit() Self {
+        pub inline fn uninit() Self {
             return Self{ .uninit = {} };
         }
 
         /// Creates a new `MaybeUnint(T)` in an uninitialized state, with the memory being filled with `0` bytes.
         /// It depends on `T` whether that already makes for proper initialization.
-        inline fn zeroed() Self {
+        pub inline fn zeroed() Self {
             var u = Self.uninit();
 
             var bytes = @ptrCast([*]u8, u.as_mut_ptr());
@@ -28,38 +28,38 @@ pub inline fn MaybeUninit(comptime T: type) type {
         }
 
         /// Gets a pointer to the contained value.
-        inline fn as_ptr(self: *const Self) *const T {
+        pub inline fn as_ptr(self: *const Self) *const T {
             return &self.value;
         }
 
         /// Gets a mutable pointer to the contained value
-        inline fn as_mut_ptr(self: *Self) *T {
+        pub inline fn as_mut_ptr(self: *Self) *T {
             return &self.value;
         }
 
         /// Extracts the value from the `MaybeUninit(T)` container.
-        inline fn assume_init(self: Self) T {
+        pub inline fn assume_init(self: Self) T {
             return self.value;
         }
 
         /// Reads the value from the `MabeUninit(T)` container.
         /// Whenever possible, prefer to use [`MaybeUninit::assume_init`] instead, which prevents duplicating the content of the `MaybeUninit(T)`.
-        inline fn read(self: *const Self) T {
+        pub inline fn read(self: *const Self) T {
             return self.as_ptr().*;
         }
 
         /// Sets the value of the `MaybeUninit(T)`.
-        inline fn write(self: *Self, value: T) void {
+        pub inline fn write(self: *Self, value: T) void {
             self.value = value;
         }
 
         /// Gets a pointer to the first element of the slice.
-        inline fn first_ptr(this: []const Self) *const T {
+        pub inline fn first_ptr(this: []const Self) *const T {
             return @ptrCast(*const T, this.ptr);
         }
 
         /// Gets a mutable pointer to the first element of the slice.
-        inline fn first_ptr_mut(this: []Self) *T {
+        pub inline fn first_ptr_mut(this: []Self) *T {
             return @ptrCast(*T, this.ptr);
         }
     };
@@ -70,6 +70,10 @@ const testing = if (@import("builtin").is_test) struct {
         @import("std").debug.assert(x == y);
     }
 } else void;
+
+test "zero init" {
+    var maybe = MaybeUninit(u8).zeroed();
+}
 
 test "test usage" {
     var maybe = MaybeUninit(u64).zeroed();

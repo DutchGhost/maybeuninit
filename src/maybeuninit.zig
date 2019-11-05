@@ -1,5 +1,10 @@
 /// A wrapper type to construct uninitialized instances of `T`.
 pub inline fn MaybeUninit(comptime T: type) type {
+    const builtin = @import("builtin");
+    if (@typeId(T) == builtin.TypeId.NoReturn) {
+        @compileError("Can't construct MaybeUninit(noreturn). It blows up your computer. See https://github.com/ziglang/zig/issues/3603");
+    }
+
     return extern union {
         value: T,
         uninit: void,
@@ -65,11 +70,14 @@ pub inline fn MaybeUninit(comptime T: type) type {
     };
 }
 
-const testing = if (@import("builtin").is_test) struct {
-    fn expectEqual(x: var, y: var) void {
-        @import("std").debug.assert(x == y);
+const testing = if (@import("builtin").is_test)
+    struct {
+        fn expectEqual(x: var, y: var) void {
+            @import("std").debug.assert(x == y);
+        }
     }
-} else void;
+else
+    void;
 
 test "zero init" {
     var maybe = MaybeUninit(u8).zeroed();
@@ -113,7 +121,7 @@ test "comptime init" {
 }
 
 test "first_ptr_mut" {
-    var maybe = [1] MaybeUninit(u64) {MaybeUninit(u64).uninit()};
+    var maybe = [1]MaybeUninit(u64){MaybeUninit(u64).uninit()};
     var ptr = MaybeUninit(u64).first_ptr_mut(&maybe);
     ptr.* = 10;
     testing.expectEqual(ptr.*, 10);

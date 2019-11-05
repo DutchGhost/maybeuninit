@@ -10,8 +10,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
 - script: |
     wget https://ziglang.org/download/0.3.0/zig-linux-x86_64-0.3.0.tar.xz

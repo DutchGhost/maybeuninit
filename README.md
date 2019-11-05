@@ -11,7 +11,7 @@ This version will be tested in CI and may only be bumped in new minor versions. 
 
 ## Recent changes
  * 0.4
-   * Prevent `MaybeUninit(noreturn)` from being created.
+   * Prevent `MaybeUninit(noreturn)` from being created. See https://github.com/ziglang/zig/issues/3603.
  * 0.3
    * Change the return type of `first_ptr_mut` from `*Self` to `*T`.
    * Adds a test that calls `first_ptr_mut` on an empty slice.

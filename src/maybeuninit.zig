@@ -28,8 +28,12 @@ pub inline fn MaybeUninit(comptime T: type) type {
         pub inline fn zeroed() Self {
             var u = Self.uninit();
 
-            var bytes = @ptrCast([*]u8, u.as_mut_ptr());
-            @memset(bytes, 0, @sizeOf(T));
+            // Don't even bother to memset zero sized types,
+            // like Void.
+            if (comptime @sizeOf(T) > 0) {
+                var bytes = @ptrCast([*]u8, u.as_mut_ptr());
+                @memset(bytes, 0, @sizeOf(T));
+            }
 
             return u;
         }
@@ -84,6 +88,10 @@ else
 
 test "zero init" {
     var maybe = MaybeUninit(u8).zeroed();
+    var maybe_void = MaybeUninit(void).zeroed();
+    maybe_void.write({});
+    var void_initted = maybe_void.assume_init();
+    testing.expectEqual(void_initted, {});
 }
 
 test "test usage" {

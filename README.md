@@ -10,6 +10,8 @@ It is inspired by [MaybeUninit](https://doc.rust-lang.org/stable/core/mem/union.
 This version will be tested in CI and may only be bumped in new minor versions. Any changes to the support minimum will be called out in the release notes.
 
 ## Recent changes
+ * 0.4
+   * Prevent `MaybeUninit(noreturn)` from being created.
  * 0.3
    * Change the return type of `first_ptr_mut` from `*Self` to `*T`.
    * Adds a test that calls `first_ptr_mut` on an empty slice.

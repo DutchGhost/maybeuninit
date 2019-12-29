@@ -10,6 +10,8 @@ It is inspired by [MaybeUninit](https://doc.rust-lang.org/stable/core/mem/union.
 This version will be tested in CI and may only be bumped in new minor versions. Any changes to the support minimum will be called out in the release notes.
 
 ## Recent changes
+ * 0.5.1
+   * Add a private constant uninit intializer, to get around https://github.com/ziglang/zig/issues/3994
  * 0.5
    * Do not call `@memset` in `MaybeUninit(T).zeroed()` if `T` has a size of 0.
  * 0.4

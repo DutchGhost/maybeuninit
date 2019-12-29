@@ -10,16 +10,19 @@ pub inline fn MaybeUninit(comptime T: type) type {
         value: T,
         uninit: void,
 
+        /// A hack to get around a compiler bug.
+        /// see https://github.com/ziglang/zig/issues/3994
+        const UNINIT = Self { .uninit = {} };
         const Self = @This();
 
         /// Creates a new initialized `MaybeUninit(T)` initialized with the given value.
         pub inline fn init(value: T) Self {
-            return Self{ .value = value };
+            return Self { .value = value };
         }
 
         /// Creates a new `MaybeUninit(T)` in an uninitialized state.
         pub inline fn uninit() Self {
-            return Self{ .uninit = {} };
+            return Self.UNINIT;
         }
 
         /// Creates a new `MaybeUnint(T)` in an uninitialized state,
@@ -114,13 +117,13 @@ test "first_ptr" {
 test "assert size" {
     testing.expectEqual(@sizeOf(MaybeUninit(u64)), @sizeOf(u64));
     testing.expectEqual(@sizeOf(MaybeUninit(?*u64)), @sizeOf(*u64));
-    testing.expectEqual(@sizeOf(?MaybeUninit(*u64)), usize(16));
+    testing.expectEqual(@sizeOf(?MaybeUninit(*u64)), @sizeOf(u8) * 16);
 }
 
 test "assert align" {
     testing.expectEqual(@alignOf(MaybeUninit(u64)), @alignOf(u64));
     testing.expectEqual(@alignOf(MaybeUninit(?*u64)), @alignOf(*u64));
-    testing.expectEqual(@alignOf(?MaybeUninit(*u32)), usize(8));
+    testing.expectEqual(@alignOf(?MaybeUninit(*u32)), @sizeOf(u8) * 8);
 }
 
 test "comptime init" {

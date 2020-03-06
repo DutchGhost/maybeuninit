@@ -1,4 +1,5 @@
 # maybeuninit
+[![License:EUPL](https://img.shields.io/badge/License-EUPL v.1.2-brightgreen.svg)](https://opensource.org/licenses/EUPL-1.2)
 ![Zig](https://github.com/DutchGhost/maybeuninit/workflows/Zig/badge.svg?branch=master)
 
 This is a userlevel implementation of the `undefined` keyword in Zig.<br>

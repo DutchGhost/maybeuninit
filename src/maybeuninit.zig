@@ -12,12 +12,12 @@ pub inline fn MaybeUninit(comptime T: type) type {
 
         /// A hack to get around a compiler bug.
         /// see https://github.com/ziglang/zig/issues/3994
-        const UNINIT = Self { .uninit = {} };
+        const UNINIT = Self{ .uninit = {} };
         const Self = @This();
 
         /// Creates a new initialized `MaybeUninit(T)` initialized with the given value.
         pub inline fn init(value: T) Self {
-            return Self { .value = value };
+            return Self{ .value = value };
         }
 
         /// Creates a new `MaybeUninit(T)` in an uninitialized state.

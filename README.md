@@ -1,15 +1,17 @@
 # maybeuninit
-[![Build Status](https://dev.azure.com/s1101481/s1101481/_apis/build/status/DutchGhost.maybeuninit%20(1)?branchName=master)](https://dev.azure.com/s1101481/s1101481/_build/latest?definitionId=2&branchName=master)
+![Zig](https://github.com/DutchGhost/maybeuninit/workflows/Zig/badge.svg?branch=master)
 
 This is a userlevel implementation of the `undefined` keyword in Zig.<br>
 It is inspired by [MaybeUninit](https://doc.rust-lang.org/stable/core/mem/union.MaybeUninit.html) in Rust.
-
+  
 ## Minimum supported `Zig`
-`0.3+`
+`master`
 
-This version will be tested in CI and may only be bumped in new minor versions. Any changes to the support minimum will be called out in the release notes.
+Each day will be tested in CI whether this project still builds on Zig master.
 
 ## Recent changes
+ * 0.5.2
+   * Only support Zig's Master branch
  * 0.5.1
    * Add a private constant uninit intializer, to get around https://github.com/ziglang/zig/issues/3994
  * 0.5

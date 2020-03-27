@@ -1,6 +1,5 @@
 /// A wrapper type to construct uninitialized instances of `T`.
 pub inline fn MaybeUninit(comptime T: type) type {
-    const builtin = @import("builtin");
     if (T == noreturn) {
         @compileError("Can't construct MaybeUninit(noreturn)." ++
             "It blows up your computer. See https://github.com/ziglang/zig/issues/3603");

@@ -16,7 +16,7 @@ pub inline fn MaybeUninit(comptime T: type) type {
 
         /// Creates a new initialized `MaybeUninit(T)` initialized with the given value.
         pub inline fn init(value: T) Self {
-            return Self{ .value = value };
+            return .{ .value = value };
         }
 
         /// Creates a new `MaybeUninit(T)` in an uninitialized state.
@@ -33,7 +33,7 @@ pub inline fn MaybeUninit(comptime T: type) type {
             // Don't even bother to memset zero sized types,
             // like Void.
             if (comptime @sizeOf(T) > 0) {
-                var bytes = @ptrCast([*]u8, u.as_mut_ptr());
+                var bytes = @ptrCast([*]u8, u.asMutPtr());
                 @memset(bytes, 0, @sizeOf(T));
             }
 
@@ -41,25 +41,25 @@ pub inline fn MaybeUninit(comptime T: type) type {
         }
 
         /// Gets a pointer to the contained value.
-        pub inline fn as_ptr(self: *const Self) *const T {
+        pub inline fn asPtr(self: *const Self) *const T {
             return &self.value;
         }
 
         /// Gets a mutable pointer to the contained value
-        pub inline fn as_mut_ptr(self: *Self) *T {
+        pub inline fn asMutPtr(self: *Self) *T {
             return &self.value;
         }
 
         /// Extracts the value from the `MaybeUninit(T)` container.
-        pub inline fn assume_init(self: Self) T {
+        pub inline fn assumeInit(self: Self) T {
             return self.value;
         }
 
         /// Reads the value from the `MabeUninit(T)` container.
-        /// Whenever possible, prefer to use [`MaybeUninit::assume_init`] instead,
+        /// Whenever possible, prefer to use [`MaybeUninit::assumeInit`] instead,
         /// which prevents duplicating the content of the `MaybeUninit(T)`.
         pub inline fn read(self: *const Self) T {
-            return self.as_ptr().*;
+            return self.asPtr().*;
         }
 
         /// Sets the value of the `MaybeUninit(T)`.
@@ -68,12 +68,12 @@ pub inline fn MaybeUninit(comptime T: type) type {
         }
 
         /// Gets a pointer to the first element of the slice.
-        pub inline fn first_ptr(this: []const Self) *const T {
+        pub inline fn firstPtr(this: []const Self) *const T {
             return @ptrCast(*const T, this.ptr);
         }
 
         /// Gets a mutable pointer to the first element of the slice.
-        pub inline fn first_ptr_mut(this: []Self) *T {
+        pub inline fn firstPtrMut(this: []Self) *T {
             return @ptrCast(*T, this.ptr);
         }
     };
@@ -92,7 +92,7 @@ test "zero init" {
     var maybe = MaybeUninit(u8).zeroed();
     var maybe_void = MaybeUninit(void).zeroed();
     maybe_void.write({});
-    var void_initted = maybe_void.assume_init();
+    var void_initted = maybe_void.assumeInit();
     testing.expectEqual(void_initted, {});
 }
 
@@ -105,10 +105,10 @@ test "test usage" {
     testing.expectEqual(maybe.read(), 10);
 }
 
-test "first_ptr" {
+test "first ptr" {
     var maybe = [2]MaybeUninit(i64){ MaybeUninit(i64).init(10), MaybeUninit(i64).uninit() };
 
-    var ptr = MaybeUninit(i64).first_ptr(&maybe);
+    var ptr = MaybeUninit(i64).firstPtr(&maybe);
 
     testing.expectEqual(ptr.*, 10);
 }
@@ -128,14 +128,14 @@ test "assert align" {
 test "comptime init" {
     comptime {
         var maybe = MaybeUninit(i32).init(42);
-        var ptr = maybe.as_mut_ptr();
+        var ptr = maybe.asMutPtr();
         testing.expectEqual(ptr.*, 42);
     }
 }
 
-test "first_ptr_mut" {
+test "first ptr mut" {
     var maybe = [1]MaybeUninit(u64){MaybeUninit(u64).uninit()};
-    var ptr = MaybeUninit(u64).first_ptr_mut(&maybe);
+    var ptr = MaybeUninit(u64).firstPtrMut(&maybe);
     ptr.* = 10;
     testing.expectEqual(ptr.*, 10);
 }

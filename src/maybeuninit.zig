@@ -81,7 +81,7 @@ pub inline fn MaybeUninit(comptime T: type) type {
 
 const testing = if (@import("builtin").is_test)
     struct {
-        fn expectEqual(x: var, y: var) void {
+        fn expectEqual(x: anytype, y: anytype) void {
             @import("std").debug.assert(x == y);
         }
     }

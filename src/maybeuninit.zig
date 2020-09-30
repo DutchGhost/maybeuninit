@@ -1,5 +1,5 @@
 /// A wrapper type to construct uninitialized instances of `T`.
-pub inline fn MaybeUninit(comptime T: type) type {
+pub fn MaybeUninit(comptime T: type) type {
     if (T == noreturn) {
         @compileError("Can't construct MaybeUninit(noreturn)." ++
             "It blows up your computer. See https://github.com/ziglang/zig/issues/3603");
@@ -15,12 +15,12 @@ pub inline fn MaybeUninit(comptime T: type) type {
         const Self = @This();
 
         /// Creates a new initialized `MaybeUninit(T)` initialized with the given value.
-        pub inline fn init(value: T) Self {
+        pub fn init(value: T) Self {
             return .{ .value = value };
         }
 
         /// Creates a new `MaybeUninit(T)` in an uninitialized state.
-        pub inline fn uninit() Self {
+        pub fn uninit() Self {
             return Self.UNINIT;
         }
 
@@ -43,44 +43,44 @@ pub inline fn MaybeUninit(comptime T: type) type {
         /// with the memory being filled with `0` bytes.
         /// It depends on `T` whether that already makes for proper
         /// initialization.
-        pub inline fn zeroed() Self {
+        pub fn zeroed() Self {
             return Self.withByte(0);
         }
 
         /// Gets a pointer to the contained value.
-        pub inline fn asPtr(self: *const Self) *const T {
+        pub fn asPtr(self: *const Self) *const T {
             return &self.value;
         }
 
         /// Gets a mutable pointer to the contained value
-        pub inline fn asMutPtr(self: *Self) *T {
+        pub fn asMutPtr(self: *Self) *T {
             return &self.value;
         }
 
         /// Extracts the value from the `MaybeUninit(T)` container.
-        pub inline fn assumeInit(self: Self) T {
+        pub fn assumeInit(self: Self) T {
             return self.value;
         }
 
         /// Reads the value from the `MabeUninit(T)` container.
         /// Whenever possible, prefer to use [`MaybeUninit::assumeInit`] instead,
         /// which prevents duplicating the content of the `MaybeUninit(T)`.
-        pub inline fn read(self: *const Self) T {
+        pub fn read(self: *const Self) T {
             return self.asPtr().*;
         }
 
         /// Sets the value of the `MaybeUninit(T)`.
-        pub inline fn write(self: *Self, value: T) void {
+        pub fn write(self: *Self, value: T) void {
             self.value = value;
         }
 
         /// Gets a pointer to the first element of the slice.
-        pub inline fn firstPtr(this: []const Self) *const T {
+        pub fn firstPtr(this: []const Self) *const T {
             return @ptrCast(*const T, this.ptr);
         }
 
         /// Gets a mutable pointer to the first element of the slice.
-        pub inline fn firstPtrMut(this: []Self) *T {
+        pub fn firstPtrMut(this: []Self) *T {
             return @ptrCast(*T, this.ptr);
         }
     };

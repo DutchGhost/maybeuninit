@@ -24,20 +24,27 @@ pub inline fn MaybeUninit(comptime T: type) type {
             return Self.UNINIT;
         }
 
-        /// Creates a new `MaybeUnint(T)` in an uninitialized state,
-        /// with the memory being filled with `0` bytes.
-        /// It depends on `T` whether that already makes for proper initialization.
-        pub inline fn zeroed() Self {
+        /// Creates a new `MaybeUninit(T)` in an uninitialized state,
+        /// with the memory being filled with `byte`.
+        /// It depends on `T` whether that already makes for proper
+        /// initialization.
+        pub fn withByte(byte: u8) Self {
             var u = Self.uninit();
 
-            // Don't even bother to memset zero sized types,
-            // like Void.
             if (comptime @sizeOf(T) > 0) {
                 var bytes = @ptrCast([*]u8, u.asMutPtr());
-                @memset(bytes, 0, @sizeOf(T));
+                @memset(bytes, byte, @sizeOf(T));
             }
 
             return u;
+        }
+
+        /// Creates a new `MaybeUnint(T)` in an uninitialized state,
+        /// with the memory being filled with `0` bytes.
+        /// It depends on `T` whether that already makes for proper
+        /// initialization.
+        pub inline fn zeroed() Self {
+            return Self.withByte(0);
         }
 
         /// Gets a pointer to the contained value.
@@ -88,6 +95,14 @@ const testing = if (@import("builtin").is_test)
 else
     void;
 
+test "with byte" {
+    var maybe = MaybeUninit(u64).withByte(0xaa);
+
+    var n = maybe.assumeInit();
+
+    testing.expectEqual(n, 0xaaaaaaaaaaaaaaaa);
+}
+
 test "zero init" {
     var maybe = MaybeUninit(u8).zeroed();
     var maybe_void = MaybeUninit(void).zeroed();
@@ -96,7 +111,7 @@ test "zero init" {
     testing.expectEqual(void_initted, {});
 }
 
-test "test usage" {
+test "arbitrary test" {
     var maybe = MaybeUninit(u64).zeroed();
 
     testing.expectEqual(maybe.read(), 0);

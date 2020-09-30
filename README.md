@@ -11,14 +11,17 @@ It is inspired by [MaybeUninit](https://doc.rust-lang.org/stable/core/mem/union.
 Each day will be tested in CI whether this project still builds on Zig master.
 
 ## Recent changes
+  * 0.6.1
+    * Add `withByte` as initializer function.
+    * Remove all use of `inline`, as the usage of `inline` was considered wrong.
   * 0.6
-    * Rename `assume_init` to `assumeInit`
-    * rename `as_ptr` and `as_mut_ptr` to `asPtr` and `asMutPtr`
-    * rename `first_ptr` and `first_ptr_mut` to `firstPtr` and `firstPtrMut`
+    * Rename `assume_init` to `assumeInit`.
+    * rename `as_ptr` and `as_mut_ptr` to `asPtr` and `asMutPtr`.
+    * rename `first_ptr` and `first_ptr_mut` to `firstPtr` and `firstPtrMut`.
   * 0.5.2
-    * Only support Zig's Master branch
+    * Only support Zig's Master branch.
   * 0.5.1
-    * Add a private constant uninit intializer, to get around https://github.com/ziglang/zig/issues/3994
+    * Add a private constant uninit intializer, to get around https://github.com/ziglang/zig/issues/3994.
   * 0.5
     * Do not call `@memset` in `MaybeUninit(T).zeroed()` if `T` has a size of 0.
   * 0.4
@@ -29,7 +32,7 @@ Each day will be tested in CI whether this project still builds on Zig master.
   * 0.2
     * Change the definition of `MaybeUninit` from `packed union` to `extern union`, due to `packed union`'s setting the alignment always to 1.
   * 0.1
-    * Initial library setup
+    * Initial library setup.
 
 ## Issues
 At the point of writing, it is impossible to create an uninitialized `MaybeUninit(T)`, and later initialize it at compiletime.<br>
